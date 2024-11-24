@@ -5,6 +5,7 @@ import animeController from "../controller/anime-controller.js";
 
 const adminRouter = new express.Router();
 adminRouter.use(adminMiddleware);
+adminRouter.get("/api/genres", genreController.get);
 adminRouter.post("/api/genres", genreController.create);
 adminRouter.post("/api/animes", animeController.create);
 

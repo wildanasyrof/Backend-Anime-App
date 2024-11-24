@@ -12,6 +12,20 @@ const create = async (req, res, next) => {
     }
 }
 
+const get = async (req, res, next) => {
+    try {
+        const { page = "1", pageSize = "10" } = req.query;
+        const result = await animeService.get(parseInt(page), parseInt(pageSize));
+        res.status(200).json({
+            message: "Successfully get anime",
+            data: result
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
 export default {
-    create
+    create,
+    get
 }

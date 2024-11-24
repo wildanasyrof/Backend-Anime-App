@@ -21,6 +21,33 @@ const create = async (request) => {
     });
 }
 
+const get = async (page = 1, pageSize = 10) => {
+    const totalRecords = await prismaClient.anime.count();
+    const animes = await prismaClient.anime.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        select: {
+            title: true,
+            description: true,
+            genres: {
+                select: {
+                    name: true,
+                }
+            },
+            imgUrl: true,
+            updatedAt: true,
+        }
+    });
+
+    return {
+        currentPage: page,
+        totalPages: Math.ceil(totalRecords / pageSize),
+        totalRecords,
+        animeData: animes
+    }
+}
+
 export default {
-    create
+    create,
+    get
 }
