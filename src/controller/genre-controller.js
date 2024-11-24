@@ -24,7 +24,21 @@ const get = async (req, res, next) => {
     }
 }
 
+const destroy = async (req, res, next) => {
+    try {
+        const {id} = req.params;
+        const result = await genreService.destroy(id);
+        res.status(200).json({
+            message: `Successfully delete genre with id ${id}.`,
+            data: result
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
 export default {
     create,
-    get
+    get,
+    destroy
 }

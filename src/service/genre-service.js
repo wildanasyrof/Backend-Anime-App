@@ -28,7 +28,32 @@ const get = async () => {
     return prismaClient.genre.findMany()
 }
 
+const destroy = async (id) => {
+    const genreId = parseInt(id);
+
+    if (!genreId || isNaN(genreId)) {
+        throw new ResponseError(400, "Invalid genre ID");
+    }
+
+    const countGenre = await prismaClient.genre.count({
+        where: {
+            id: genreId
+        }
+    });
+
+    if (countGenre !== 1) {
+        throw new ResponseError(404, "Genre is not found!");
+    }
+
+    return prismaClient.genre.delete({
+        where: {
+            id: genreId
+        }
+    });
+}
+
 export default {
     create,
-    get
+    get,
+    destroy
 }

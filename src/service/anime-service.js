@@ -1,6 +1,7 @@
 import {validate} from "../validation/validation.js";
 import {createAnimeValidation} from "../validation/anime-validation.js";
 import {prismaClient} from "../app/database.js";
+import {ResponseError} from "../utils/response-error.js";
 
 const create = async (request) => {
     const animeRequest = validate(createAnimeValidation, request);
@@ -27,6 +28,7 @@ const get = async (page = 1, pageSize = 10) => {
         skip: (page - 1) * pageSize,
         take: pageSize,
         select: {
+            id: true,
             title: true,
             description: true,
             genres: {
@@ -43,11 +45,36 @@ const get = async (page = 1, pageSize = 10) => {
         currentPage: page,
         totalPages: Math.ceil(totalRecords / pageSize),
         totalRecords,
-        animeData: animes
+        listAnime: animes
     }
+}
+
+const destroy = async (id) => {
+    const animeId = parseInt(id);
+
+    if (!animeId || isNaN(animeId)) {
+        throw new ResponseError(400, "Invalid anime ID");
+    }
+
+    const countAnime = await prismaClient.anime.count({
+        where: {
+            id: animeId,
+        }
+    });
+
+    if (countAnime !== 1) {
+        throw new ResponseError(404, "Anime is not found!");
+    }
+
+    return prismaClient.anime.delete({
+        where: {
+            id: animeId
+        }
+    })
 }
 
 export default {
     create,
-    get
+    get,
+    destroy
 }
