@@ -28,6 +28,42 @@ const get = async () => {
     return prismaClient.genre.findMany()
 }
 
+const update = async (request, id) => {
+    const genreId = parseInt(id);
+    const genre = validate(genreValidation, request);
+
+    const genreExists = await prismaClient.genre.findUnique({
+        where: {
+            id: genreId,
+        },
+    });
+
+    if (!genreExists) {
+        throw new ResponseError(404, "Genre ID is not found!");
+    }
+
+    const countGenre = await prismaClient.genre.count({
+        where: {
+            name: genre.name,
+            NOT: {
+                id: genreId,
+            },
+        },
+    });
+
+    if (countGenre > 0) {
+        throw new ResponseError(400, "Genre name is already exist!");
+    }
+
+    return prismaClient.genre.update({
+        where: {
+            id: genreId,
+        },
+        data: genre
+    });
+};
+
+
 const destroy = async (id) => {
     const genreId = parseInt(id);
 
@@ -55,5 +91,6 @@ const destroy = async (id) => {
 export default {
     create,
     get,
+    update,
     destroy
 }

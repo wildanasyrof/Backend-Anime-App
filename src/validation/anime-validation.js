@@ -7,6 +7,14 @@ const createAnimeValidation = Joi.object({
     imgUrl: Joi.string(),
 });
 
+const updateAnimeValidation = Joi.object({
+    title: Joi.string().max(100),
+    description: Joi.string(),
+    genres: Joi.array().items(Joi.string().max(50)), // Array of strings
+    imgUrl: Joi.string(),
+});
+
 export {
-    createAnimeValidation
+    createAnimeValidation,
+    updateAnimeValidation
 }

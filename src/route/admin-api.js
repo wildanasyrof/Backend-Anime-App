@@ -9,10 +9,12 @@ adminRouter.use(adminMiddleware);
 //Genre Routes
 adminRouter.get("/api/genres", genreController.get);
 adminRouter.post("/api/genres", genreController.create);
+adminRouter.put("/api/genres/:id", genreController.update);
 adminRouter.delete("/api/genres/:id", genreController.destroy);
 
 // Anime Routes
 adminRouter.post("/api/animes", animeController.create);
+adminRouter.put("/api/animes/:id", animeController.update);
 adminRouter.delete("/api/animes/:id", animeController.destroy);
 
 export {
