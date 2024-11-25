@@ -19,7 +19,9 @@ adminRouter.put("/api/animes/:id", animeController.update);
 adminRouter.delete("/api/animes/:id", animeController.destroy);
 
 // Episode Routes
-adminRouter.post("/api/animes/:animeId/episodes", episodeController.create);
+adminRouter.post("/api/episodes", episodeController.create);
+adminRouter.put("/api/episodes/:epsId", episodeController.update);
+adminRouter.delete("/api/episodes/:epsId", episodeController.destroy);
 
 export {
     adminRouter

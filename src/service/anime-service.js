@@ -114,9 +114,36 @@ const destroy = async (id) => {
     })
 }
 
+const detailAnime = async (id) => {
+    const animeId = parseInt(id);
+
+    if (!animeId || isNaN(animeId)) {
+        throw new ResponseError(400, "Invalid anime ID");
+    }
+
+    return prismaClient.anime.findUnique({
+        where: {
+            id: animeId,
+        },
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            genres: {
+                select: {
+                    name: true,
+                }
+            },
+            imgUrl: true,
+            episodes: true
+        }
+    })
+}
+
 export default {
     create,
     get,
     update,
-    destroy
+    destroy,
+    detailAnime
 }

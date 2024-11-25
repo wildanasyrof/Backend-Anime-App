@@ -51,9 +51,23 @@ const destroy = async (req, res, next) => {
     }
 }
 
+const detailAnime = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await animeService.detailAnime(id);
+        res.status(200).json({
+            message: `Successfully get detail anime with id ${id}.`,
+            data: result
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
 export default {
     create,
     get,
     update,
-    destroy
+    destroy,
+    detailAnime
 }

@@ -12,6 +12,7 @@ publicRouter.patch("/api/users/update", authMiddleware, userController.update);
 
 // Anime Routes
 publicRouter.get("/api/animes", animeController.get);
+publicRouter.get("/api/animes/:id", animeController.detailAnime);
 
 export {
     publicRouter
