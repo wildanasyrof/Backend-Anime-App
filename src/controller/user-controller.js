@@ -1,4 +1,6 @@
 import userService from "../service/user-service.js";
+import * as fs from "node:fs";
+import {logger} from "../app/logging.js";
 
 const register = async (req, res, next) => {
     try {
@@ -29,12 +31,19 @@ const update = async (req, res, next) => {
         const userId = req.user.id;
         const request = req.body;
         request.id = userId;
+        request.imgUrl = req.file.path;
         const result = await userService.update(request);
         res.status(200).json({
             message: "User updated successfully",
             data: result
         })
     } catch (e) {
+        const uploadedFilePath = req.file.path;
+        fs.unlink(uploadedFilePath, (err) => {
+            if (err) {
+                logger.error('Failed to delete uploaded file:', err);
+            }
+        });
         next(e);
     }
 }

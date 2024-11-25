@@ -65,14 +65,28 @@ const login = async (request) => {
 const update = async (request) => {
     const updateRequest = validate(updateUserValidation, request);
 
-    const countUser = await prismaClient.user.count({
-        where: {
-            username: updateRequest.username
-        }
-    })
+    if (updateRequest.username) {
+        const countUsername = await prismaClient.user.count({
+            where: {
+                username: updateRequest.username
+            }
+        });
 
-    if (countUser !== 0) {
-        throw new ResponseError(400, "Username already used!");
+        if (countUsername !== 0) {
+            throw new ResponseError(400, "Username already used!");
+        }
+    }
+
+    if (updateRequest.email) {
+        const countEmail = await prismaClient.user.count({
+            where: {
+                email: updateRequest.email
+            }
+        });
+
+        if (countEmail !== 0) {
+            throw new ResponseError(400, "Email already used!");
+        }
     }
 
     return prismaClient.user.update({
