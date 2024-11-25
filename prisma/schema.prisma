@@ -35,21 +35,38 @@ model User {
 }
 
 model Genre {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique @db.VarChar(50)
-  animes Anime[]
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)
+  animes    Anime[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@map("genres")
 }
 
 model Anime {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(100)
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(100)
   genres      Genre[]
-  description String   @db.LongText
-  imgUrl      String   @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  description String    @db.LongText
+  imgUrl      String    @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  episodes    Episode[]
 
   @@map("animes")
+}
+
+model Episode {
+  id            Int      @id @default(autoincrement())
+  animeId       Int
+  anime         Anime    @relation(fields: [animeId], references: [id])
+  episodeNumber Int
+  title         String   @db.VarChar(100)
+  description   String   @db.Text
+  videoUrl      String   @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+
+  @@map("episodes")
 }
