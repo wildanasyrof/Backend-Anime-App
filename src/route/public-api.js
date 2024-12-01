@@ -3,6 +3,7 @@ import userController from "../controller/user-controller.js";
 import {authMiddleware} from "../middleware/auth-middleware.js";
 import animeController from "../controller/anime-controller.js";
 import {multerUpload} from "../utils/file-upload.js";
+import userFavoriteController from "../controller/user-favorite-controller.js";
 
 const publicRouter = new express.Router();
 
@@ -14,6 +15,10 @@ publicRouter.patch("/api/users/update", multerUpload.single("file"), authMiddlew
 // Anime Routes
 publicRouter.get("/api/animes", animeController.get);
 publicRouter.get("/api/animes/:id", animeController.detailAnime);
+
+// Favorite Routes
+publicRouter.post("/api/favorites/", authMiddleware, userFavoriteController.create);
+publicRouter.delete("/api/favorites/", authMiddleware, userFavoriteController.destroy);
 
 export {
     publicRouter

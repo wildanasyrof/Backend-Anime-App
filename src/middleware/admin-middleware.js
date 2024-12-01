@@ -30,7 +30,7 @@ export const adminMiddleware = (req, res, next) => {
             });
         }
 
-        req.user = user;
+        req.user = admin;
         next();
     });
 };

@@ -33,7 +33,7 @@ const update = async (req, res, next) => {
         request.id = userId;
         request.imgUrl = req.file.path;
         const result = await userService.update(request);
-        res.status(200).json({
+        res.status(201).json({
             message: "User updated successfully",
             data: result
         })
