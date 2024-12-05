@@ -31,19 +31,22 @@ const update = async (req, res, next) => {
         const userId = req.user.id;
         const request = req.body;
         request.id = userId;
-        request.imgUrl = req.file.path;
+        if (req.file) {
+            request.imgUrl = req.file.path;
+        }
         const result = await userService.update(request);
         res.status(201).json({
             message: "User updated successfully",
             data: result
         })
     } catch (e) {
-        const uploadedFilePath = req.file.path;
-        fs.unlink(uploadedFilePath, (err) => {
-            if (err) {
-                logger.error('Failed to delete uploaded file:', err);
-            }
-        });
+        if (req.file && req.file.path) {
+            fs.unlink(req.file.path, (err) => {
+                if (err) {
+                    logger.error('Failed to delete uploaded file:', err);
+                }
+            });
+        }
         next(e);
     }
 }

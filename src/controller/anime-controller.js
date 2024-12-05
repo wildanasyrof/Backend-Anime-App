@@ -37,19 +37,22 @@ const get = async (req, res, next) => {
 const update = async (req, res, next) => {
     try {
         const {id} = req.params;
-        req.body.imgUrl = req.file.path;
+        if (req.file) {
+            req.body.imgUrl = req.file.path;
+        }
         const result = await animeService.update(req.body, id);
         res.status(200).json({
             message: `Successfully updated anime with id ${id}.`,
             data: result
         });
     } catch (e) {
-        const uploadedFilePath = req.file.path;
-        fs.unlink(uploadedFilePath, (err) => {
-            if (err) {
-                logger.error('Failed to delete uploaded file:', err);
-            }
-        });
+        if (req.file && req.file.path) {
+            fs.unlink(req.file.path, (err) => {
+                if (err) {
+                    logger.error('Failed to delete uploaded file:', err);
+                }
+            });
+        }
         next(e);
     }
 }
